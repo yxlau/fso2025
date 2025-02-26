@@ -6,35 +6,34 @@ import Countries from "./components/Countries";
 function App() {
   const [filter, setFilter] = useState("");
   const [allCountries, setAllCountries] = useState([]);
-  const [filteredCountries, setFilteredCountries] = useState([]);
-
-  const updateFilter = (e) => {
-    e.preventDefault();
-    setCountry(e.target.value);
-  };
+  // const [filteredCountries, setFilteredCountries] = useState([]);
+  //  const [country, setCountry] = useState("")
+  const [weather, setWeather] = useState({})
 
   useEffect(() => {
     CountryService.getAll().then((response) => setAllCountries(response));
   }, []);
 
+
+
+  const updateFilter = (e) => {
+    e.preventDefault();
+    setFilter(e.target.value)
+  };
+
   const setCountry = (countryName) => {
     setFilter(countryName);
-    setFilteredCountries(
-      allCountries.filter((country) => {
-        return country.name.common
-          .toLowerCase()
-          .includes(countryName.toLowerCase());
-      })
-    );
   };
+
+
 
   return (
     <>
       <div>
-        find countries{" "}
+        find country{" "}
         <input type="text" value={filter} onChange={updateFilter} />
         <Countries
-          countries={filteredCountries}
+          countries={allCountries}
           filter={filter}
           setCountry={setCountry}
         />
