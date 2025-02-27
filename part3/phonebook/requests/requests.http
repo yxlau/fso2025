@@ -1,0 +1,14 @@
+@url = http://localhost:3001/api
+
+DELETE {{url}}/persons/100
+
+###
+POST {{url}}/persons
+content-type: application/json
+
+{
+    "name": "Tomie",
+    "number": "12345"
+}
+
+
