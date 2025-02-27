@@ -6,26 +6,19 @@ import Countries from "./components/Countries";
 function App() {
   const [filter, setFilter] = useState("");
   const [allCountries, setAllCountries] = useState([]);
-  // const [filteredCountries, setFilteredCountries] = useState([]);
-  //  const [country, setCountry] = useState("")
-  const [weather, setWeather] = useState({})
 
   useEffect(() => {
     CountryService.getAll().then((response) => setAllCountries(response));
   }, []);
 
-
-
   const updateFilter = (e) => {
     e.preventDefault();
-    setFilter(e.target.value)
+    setFilter(e.target.value);
   };
 
   const setCountry = (countryName) => {
     setFilter(countryName);
   };
-
-
 
   return (
     <>

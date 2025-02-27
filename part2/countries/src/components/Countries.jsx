@@ -2,13 +2,12 @@ import Country from "./Country.jsx";
 import Weather from "./Weather.jsx";
 
 const Countries = ({ countries, filter, setCountry }) => {
+  const filteredCountries = countries.filter((country) => {
+    return country.name.common.toLowerCase().includes(filter.toLowerCase());
+  });
 
-  const filteredCountries = countries.filter(country => {
-    return country.name.common.toLowerCase().includes(filter.toLowerCase())
-  })
-
-  if ( ! filter){
-    return (<></>)
+  if (!filter) {
+    return <></>;
   }
 
   if (filteredCountries.length > 10) {
@@ -19,28 +18,32 @@ const Countries = ({ countries, filter, setCountry }) => {
     return (
       <>
         {filteredCountries.map((country) => (
-          <div key={country.ccn3}> {country.name.common} <button onClick={() => setCountry(country.name.common)}>show</button></div>
+          <div key={country.ccn3}>
+            {" "}
+            {country.name.common}{" "}
+            <button onClick={() => setCountry(country.name.common)}>
+              show
+            </button>
+          </div>
         ))}
       </>
     );
   }
 
-  if (filteredCountries.length === 1 ){   
-    
-    const country = filteredCountries[0]
-    console.log("the 1 country", country);
-    
+  if (filteredCountries.length === 1) {
+    console.log("1 country");
+
+    const country = filteredCountries[0];
+
     return (
       <div>
-      <Country country={country} />
-      <Weather countryData={country} />
+        <Country country={country} />
+        <Weather countryData={country} />
       </div>
-    )
+    );
   }
 
-  return (
-    <div>no countries</div>
-  )
+  return <div>no countries</div>;
 };
 
 export default Countries;
