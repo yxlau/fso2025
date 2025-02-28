@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
+const cors = require('cors')
 
 let persons = [
     {
@@ -25,6 +26,7 @@ let persons = [
     }
 ]
 
+
 app.use(express.json())
 app.use(morgan((tokens, req, res) => {
     return [
@@ -36,6 +38,7 @@ app.use(morgan((tokens, req, res) => {
         JSON.stringify(req.body)
     ].join(' ')
 }))
+app.use(cors())
 
 
 app.get('/api/persons', (request, response) => {
@@ -87,7 +90,7 @@ app.delete('/api/persons/:id', (request, response) => {
     return response.status(404).send({ error: "Person not found" })
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 
