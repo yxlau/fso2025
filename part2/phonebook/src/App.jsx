@@ -61,6 +61,8 @@ const App = () => {
   const addEntry = (e) => {
     e.preventDefault();
 
+    console.log("new", newName, newNumber);
+
     if (!newName || !newNumber) {
       console.log("not new name or number");
 
@@ -133,6 +135,8 @@ const App = () => {
         onSubmit={addEntry}
         handleNumberChange={handleNumberChange}
         handleNameChange={handleNameChange}
+        newName={newName}
+        newNumber={newNumber}
       />
       <h2>Numbers</h2>
       <Persons entries={persons} filter={filter} deleteEntry={deleteEntry} />
