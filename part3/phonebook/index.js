@@ -39,6 +39,7 @@ app.use(morgan((tokens, req, res) => {
     ].join(' ')
 }))
 app.use(cors())
+app.use(express.static('dist'))
 
 
 app.get('/api/persons', (request, response) => {
