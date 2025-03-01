@@ -61,8 +61,6 @@ const App = () => {
   const addEntry = (e) => {
     e.preventDefault();
 
-    console.log("new", newName, newNumber);
-
     if (!newName || !newNumber) {
       console.log("not new name or number");
 
@@ -76,38 +74,39 @@ const App = () => {
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
     };
 
     const existingPerson = persons.find((person) => person.name === newName);
 
-    if ( existingPerson ) {
-      if (confirm(
-        `${newName} is already added to phonebook, replace the old number with a new one?`
-      )) {
-      PhonebookService.update(existingPerson.id, newPerson)
-        .then((response) => {
-          setPersons(
-            persons.map((person) =>
-              person.id === existingPerson.id ? response : person
-            )
-          );
-          updateNotification(
-            `${existingPerson.name}'s number was updated`,
-            false
-          );
-          setNewName("");
-          setNewNumber("");
-        })
-        .catch((error) => {
-          updateNotification(
-            `${newName} has already been removed from the server`,
-            true
-          );
-        });
-    }  
-  }
-    else {
+    if (existingPerson) {
+      if (
+        confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        PhonebookService.update(existingPerson.id, newPerson)
+          .then((response) => {
+            setPersons(
+              persons.map((person) =>
+                person.id === existingPerson.id ? response : person
+              )
+            );
+            updateNotification(
+              `${existingPerson.name}'s number was updated`,
+              false
+            );
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch((error) => {
+            console.log(error.message);
+            updateNotification(
+              `${newName} has already been removed from the server`,
+              true
+            );
+          });
+      }
+    } else {
       PhonebookService.create(newPerson)
         .then((response) => {
           setPersons(persons.concat(response));
