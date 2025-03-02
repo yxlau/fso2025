@@ -15,6 +15,8 @@ const App = () => {
   useEffect(() => {
     PhonebookService.getAll().then((response) => {
       setPersons(response);
+    }).catch(error => {
+      updateNotification(error.response.data.error, true)
     });
   }, []);
 
@@ -51,10 +53,7 @@ const App = () => {
         setPersons(persons.filter((person) => person.id !== id));
       })
       .catch((error) => {
-        setNotification({
-          message: `Already deleted ${person.name}`,
-          isError: false,
-        });
+       updateNotification(error.response.data.error, true)
       });
   };
 
@@ -99,9 +98,9 @@ const App = () => {
             setNewNumber("");
           })
           .catch((error) => {
-            console.log(error.message);
+            console.log("error", error);
             updateNotification(
-              `${newName} has already been removed from the server`,
+              error.response.data.error,
               true
             );
           });
@@ -115,7 +114,7 @@ const App = () => {
           updateNotification(`Added ${newName}`, false);
         })
         .catch((error) => {
-          updateNotification(`Failed to create ${newName}`, true);
+          updateNotification(error.response.data.error, true);
           setPersons(persons.concat(newPerson));
         });
     }

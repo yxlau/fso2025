@@ -6,29 +6,6 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const Entry = require('./models/entry')
 
-let persons = [
-  {
-    "id": "1",
-    "name": "Arto Hellas",
-    "number": "040-123456"
-  },
-  {
-    "id": "2",
-    "name": "Ada Lovelace",
-    "number": "39-44-5323523"
-  },
-  {
-    "id": "3",
-    "name": "Dan Abramov",
-    "number": "12-43-234345"
-  },
-  {
-    "id": "4",
-    "name": "Mary Poppendieck",
-    "number": "39-23-6423122"
-  }
-]
-
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(morgan((tokens, req, res) => {
@@ -44,7 +21,7 @@ app.use(morgan((tokens, req, res) => {
 app.use(cors())
 
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
   Entry.find().then(person => {
     response.json(person)
   }).catch(error => {
@@ -52,7 +29,7 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   Entry.findById(request.params.id).then(entry => {
     if (entry) {
       response.json(entry)
@@ -60,19 +37,13 @@ app.get('/api/persons/:id', (request, response) => {
       response.status(404).end()
     }
   }).catch(error => {
-    respobnse.status(400).send({ error: 'malformatted id' })
+    response.status(400).send({ error: 'malformatted id' })
   })
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {  
   const body = request.body
 
-  if (!body.name || !body.number) {
-    return response.status(400).send({ error: "Missing name/ number" })
-  }
-  if (persons.some(p => p.name === body.name)) {
-    return response.status(400).send({ error: 'name must be unique' })
-  }
   const entry = new Entry({
     name: body.name,
     number: body.number,
@@ -83,7 +54,7 @@ app.post('/api/persons', (request, response) => {
   }).catch(error => next(error))
 })
 
-app.get('/info', (request, response) => {
+app.get('/info', (request, response, next) => {
   Entry.find().then(entries => {
     response.send(
       `<div>Phonebook has info for ${entries.length} people.</div>
@@ -107,7 +78,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number
   }
 
-  Entry.findByIdAndUpdate(request.params.id, entry, { new: true })
+  Entry.findByIdAndUpdate(request.params.id, entry, { new: true, runValidators: true, context: 'query' })
     .then(updatedEntry => {
       response.json(updatedEntry)
     })
@@ -115,12 +86,12 @@ app.put('/api/persons/:id', (request, response, next) => {
 })
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
-
+  console.log(error.message)
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError'){
+    return response.status(400).json({error: error.message})
   }
-
   next(error)
 }
 app.use(errorHandler)

@@ -7,8 +7,7 @@ POST {{url}}/persons
 content-type: application/json
 
 {
-    "name": "Tomie",
-    "number": "12345"
+    "name": "Tomie"
 }
 
 

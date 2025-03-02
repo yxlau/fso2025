@@ -5,18 +5,12 @@ const create = (newPerson) => {
   return axios
     .post(baseUrl, newPerson)
     .then((response) => response.data)
-    .catch((error) => {
-      console.log(error);
-    });
 };
 
 const getAll = () => {
   return axios
     .get(baseUrl)
     .then((response) => response.data)
-    .catch((error) => {
-      console.log(error);
-    });
 };
 
 const remove = (id) => {
@@ -24,6 +18,8 @@ const remove = (id) => {
 };
 
 const update = (id, newPerson) => {
+  console.log('update service', id, newPerson);
+  
   return axios
     .put(`${baseUrl}/${id}`, newPerson)
     .then((response) => response.data);
