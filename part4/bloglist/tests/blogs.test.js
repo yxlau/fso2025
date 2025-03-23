@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, describe } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
@@ -46,13 +46,32 @@ test('blog posts can be created', async () => {
   assert.strictEqual(newBlogs.body.length - initialBlogs.body.length, 1)
 });
 
-test.only('when missing, likes default to 0 on create', async () => {
-  const response = await api
-    .post('/api/blogs')
-    .send(helper.missingLikesBlog)
 
-    console.log("response", response)
-  assert.strictEqual(response.body.likes, 0)
+describe('missing properties', () => {
+  test('when missing, likes default to 0 on create', async () => {
+    const { likes, ...blog } = helper.newBlog
+    const response = await api
+      .post('/api/blogs')
+      .send(blog)
+
+    assert.strictEqual(response.body.likes, 0)
+  })
+
+  test('when title is missing, server responds with 400 error', async () => {
+    const { title, ...blog } = helper.newBlog
+    const response = await api
+      .post('/api/blogs')
+      .send(blog)
+      .expect(400)
+  })
+
+  test('when url is missing, server responds with 400 error', async () => {
+    const { url, ...blog } = helper.newBlog
+    const response = await api
+      .post('/api/blogs')
+      .send(blog)
+      .expect(400)
+  })
 })
 
 after(async () => {

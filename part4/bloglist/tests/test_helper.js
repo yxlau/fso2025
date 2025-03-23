@@ -36,16 +36,8 @@ const newBlog =
     "likes": 55
   }
 
-const missingLikesBlog = {
-  "title": "If on a Winter's Night a Traveler",
-  "author": "Nathanael West",
-  "url": "https://raw-molasses.net"
-}
-
-
 
 module.exports = {
   initialBlogs,
-  newBlog,
-  missingLikesBlog
+  newBlog
 }
