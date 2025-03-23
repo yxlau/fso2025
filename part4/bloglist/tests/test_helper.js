@@ -28,16 +28,15 @@ const initialBlogs = [
   }
 ]
 
-const newBlog = 
-  {
-    "title": "Lord of the Flies",
-    "author": "John Kennedy Toole",
-    "url": "https://abandoned-granny.info/",
-    "likes": 55
-  }
-
+const newBlog =
+{
+  "title": "Lord of the Flies",
+  "author": "John Kennedy Toole",
+  "url": "https://abandoned-granny.info/",
+  "likes": 55
+}
 
 module.exports = {
   initialBlogs,
-  newBlog
+  newBlog,
 }

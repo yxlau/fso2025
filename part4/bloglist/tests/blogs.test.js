@@ -74,6 +74,36 @@ describe('missing properties', () => {
   })
 })
 
+
+test('successfully deletes a single blog', async () => {
+  const blogs = await api.get('/api/blogs')
+  await api
+    .delete(`/api/blogs/${blogs.body[0].id}`)
+    .expect(204)
+
+  const updatedBlogs = await api.get('/api/blogs')
+
+  assert.strictEqual(blogs.body.length - updatedBlogs.body.length, 1)
+})
+
+test('successfully updates a single blog', async () => {
+  const blogs = await api.get('/api/blogs')
+  const { likes, id, ...body } = blogs.body[0]
+
+  await api
+    .put(`/api/blogs/${id}`)
+    .send({
+      likes: likes + 2,
+      body
+    })
+    .expect(200)
+
+  const updatedBlog = await api
+    .get(`/api/blogs/${id}`)
+
+  assert.strictEqual(updatedBlog.body.likes - likes, 2)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
