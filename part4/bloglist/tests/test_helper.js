@@ -28,8 +28,24 @@ const initialBlogs = [
   }
 ]
 
+const newBlog = 
+  {
+    "title": "Lord of the Flies",
+    "author": "John Kennedy Toole",
+    "url": "https://abandoned-granny.info/",
+    "likes": 55
+  }
+
+const missingLikesBlog = {
+  "title": "If on a Winter's Night a Traveler",
+  "author": "Nathanael West",
+  "url": "https://raw-molasses.net"
+}
+
 
 
 module.exports = {
-  initialBlogs
+  initialBlogs,
+  newBlog,
+  missingLikesBlog
 }

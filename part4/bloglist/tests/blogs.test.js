@@ -24,15 +24,35 @@ test('blogs are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
-test('returns the correct number of blogs', async() => {
+test('returns the correct number of blogs', async () => {
   const response = await api.get('/api/blogs')
   assert.strictEqual(response.body.length, 4)
 })
 
-test('uid of blog posts is id instead of _id', async() => {
+test('uid of blog posts is id instead of _id', async () => {
   const response = await api.get('/api/blogs')
   assert.ok(response.body[0].id)
-  assert.ok(! response.body[0]._id)
+  assert.ok(!response.body[0]._id)
+})
+
+test('blog posts can be created', async () => {
+  const initialBlogs = await api.get('/api/blogs')
+  const response = await api
+    .post('/api/blogs')
+    .send(helper.newBlog)
+
+  const newBlogs = await api.get('/api/blogs')
+
+  assert.strictEqual(newBlogs.body.length - initialBlogs.body.length, 1)
+});
+
+test.only('when missing, likes default to 0 on create', async () => {
+  const response = await api
+    .post('/api/blogs')
+    .send(helper.missingLikesBlog)
+
+    console.log("response", response)
+  assert.strictEqual(response.body.likes, 0)
 })
 
 after(async () => {
