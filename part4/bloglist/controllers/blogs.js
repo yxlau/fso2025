@@ -23,17 +23,17 @@ blogsRouter.get("/:id", async (request, response) => {
 
 blogsRouter.post("/", async (request, response) => {
   const body = request.body;
-  // const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
 
-  // if (!decodedToken.id) {
-  //   return response.status(401).json({ error: "token invalid" });
-  // }
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "token invalid" });
+  }
 
   if (!body.title || !body.url) {
     return response.status(400).end();
   }
 
-  const user = await User.findOne({});
+  const user = await User.findById(decodedToken.id);
 
   const blog = new Blog({
     title: body.title,

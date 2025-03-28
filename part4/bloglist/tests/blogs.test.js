@@ -95,13 +95,17 @@ test("successfully updates a single blog", async () => {
   assert.strictEqual(updatedBlog.body.likes - likes, 2);
 });
 
-describe.only("blog list expansion", () => {
-  test.only("blog list returns user info", async () => {
+describe("blog list expansion", () => {
+  test("blog list returns user info", async () => {
     const response = await api.get("/api/blogs");
     const users = response.body.filter((blog) => "user" in blog).length;
 
     assert.strictEqual(response.body.length, users);
   });
+});
+
+test.only("user cannot post when unauthorized", async () => {
+  await api.post("/api/blogs").expect(401);
 });
 
 after(async () => {
