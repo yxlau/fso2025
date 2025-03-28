@@ -1,0 +1,38 @@
+@baseUrl = http://localhost:3001
+
+get {{baseUrl}}/api/users
+
+###
+get {{baseUrl}}/api/blogs
+
+###
+post {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+   "username": "andy",
+   "name": "andy",
+  "password": "andworm"
+}
+
+###
+post {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "username": "sandy",
+  "password": "sandworm"
+}
+
+###
+post {{baseUrl}}/api/blogs
+Content-Type: application/json 
+
+{
+  "title": "Bible",
+  "author": "John Ormsby",
+  "url": "https://deafening-story.org",
+  "likes": 76
+}
+
+
