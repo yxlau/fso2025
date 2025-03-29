@@ -45,7 +45,6 @@ const userExtractor = (request, response, next) => {
   if (authorization && authorization.startsWith('Bearer ')) {
     request.user =  jwt.verify(authorization.replace('Bearer ', ''), process.env.SECRET)
   }
-
   next()
 }
 
