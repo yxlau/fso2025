@@ -23,17 +23,14 @@ blogsRouter.get("/:id", async (request, response) => {
 
 blogsRouter.post("/", async (request, response) => {
   const body = request.body;
-  const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token invalid" });
-  }
+  if (!request.user) return response.status(401).json({error: 'invalid token'})
 
   if (!body.title || !body.url) {
     return response.status(400).end();
   }
 
-  const user = await User.findById(decodedToken.id);
+  const user = await User.findById(request.user.id);
 
   const blog = new Blog({
     title: body.title,
@@ -51,12 +48,28 @@ blogsRouter.post("/", async (request, response) => {
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
-  const deleted = await Blog.findByIdAndDelete(request.params.id);
+  console.log(request.user)
+  if (!request.user) return response.status(401).json({error: 'invalid token'})
+  
+  const blog = await Blog.findById(request.params.id);
+
+  if (!blog){
+    return response.status(404).json({error: "Blog not found"})
+  }
+
+  if (blog.user.id.toString() === request.user.id.toString()){
+    await blog.deleteOne();
+  } else {
+    return response.status(403).json({error: 'You can only delete your own blog'})
+  }
+  
   response.status(204).end();
 });
 
 blogsRouter.put("/:id", async (request, response) => {
   const { id, ...body } = request.body;
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  
   const updated = await Blog.findByIdAndUpdate(request.params.id, body, {
     runValidators: true,
   });
