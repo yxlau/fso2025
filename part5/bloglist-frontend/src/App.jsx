@@ -13,13 +13,20 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
+  useEffect(() => {
+    const user = window.localStorage.getItem("user");
+    if (user) {
+      setUser(JSON.parse(user));
+    }
+  }, []);
+
   const loginHandler = async (e) => {
     e.preventDefault();
 
     try {
       const response = await loginService.login({ username, password });
       setUser(response);
-      window.localStorage.setItem("token", response.token);
+      window.localStorage.setItem("user", JSON.stringify(response));
     } catch (error) {
       console.error("Error:", error.message);
     }
@@ -54,7 +61,7 @@ const App = () => {
   );
 
   const handleLogout = () => {
-    window.localStorage.removeItem("token");
+    window.localStorage.removeItem("user");
     setUser("");
   };
 
