@@ -13,8 +13,9 @@ const getAll = async () => {
 };
 
 const create = async (body) => {
+  console.log("the token", token);
   const config = {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: token },
   };
   const response = await axios.post(baseUrl, body, config);
   return response.data;

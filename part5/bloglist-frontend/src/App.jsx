@@ -16,36 +16,24 @@ const App = () => {
     const user = window.localStorage.getItem("user");
     if (user) {
       setUser(JSON.parse(user));
+      blogService.setToken(JSON.parse(user).token);
+    } else {
+      setUser("");
     }
   }, []);
-
-  const handleLogout = () => {
-    window.localStorage.removeItem("user");
-    setUser("");
-  };
 
   if (user) {
     return (
       <div>
-        <h2>blogs</h2>
-        <p>
-          {user ? `${user.name} logged in` : ""}
-          <button onClick={handleLogout}>Logout</button>
-        </p>
+        <BlogForm user={user} setUser={setUser} />
+        <br />
         {blogs.map((blog) => (
           <Blog key={blog.id} blog={blog} />
         ))}
-        <h2>create new</h2>
-        <BlogForm token={user.token} />
       </div>
     );
   } else {
-    return (
-      <div>
-        <h2>Log in to application</h2>
-        <LoginForm setUser={setUser} />
-      </div>
-    );
+    return <LoginForm setUser={setUser} />;
   }
 };
 
