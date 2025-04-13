@@ -6,15 +6,11 @@ const BlogForm = ({ user, setUser, createBlog }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
-  const [status, setStatus] = useState("");
-
-
 
   const create = async (e) => {
     e.preventDefault();
     createBlog({title, author, url})
     setTimeout(() => {
-      setStatus("");
       setTitle("");
       setAuthor("");
       setUrl("");

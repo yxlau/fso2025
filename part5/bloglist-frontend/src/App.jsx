@@ -23,13 +23,13 @@ const App = () => {
            title,
            author,
            url,
-         });
-         setNotification({status: "Success", message: `a new blog ${title} by ${author} added`});
+         });         
+         setNotification({status: "success", message: `a new blog ${title} by ${author} added`});
        } catch (error) {
-         setNotification({status: "Error", message: error.message});
+         setNotification({status: "error", message: error.message});
          console.log("Error: ", error.message);
        }
-       setTimeout(() => setNotification({}, 5000))
+setTimeout(() => setNotification({}), 5000);
   }
 
   useEffect(() => {
