@@ -2,32 +2,17 @@ import { useState } from "react";
 import blogService from "../services/blogs";
 import Notification from "./Notification";
 
-const BlogForm = ({ user, setUser }) => {
+const BlogForm = ({ user, setUser, createBlog }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
   const [status, setStatus] = useState("");
 
-  const handleLogout = () => {
-    window.localStorage.removeItem("user");
-    setUser("");
-  };
 
-  const createBlog = async (e) => {
+
+  const create = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await blogService.create({
-        title,
-        author,
-        url,
-      });
-
-      setStatus("success");
-    } catch (error) {
-      setStatus("error");
-      console.log("Error: ", error.message);
-    }
+    createBlog({title, author, url})
     setTimeout(() => {
       setStatus("");
       setTitle("");
@@ -38,20 +23,10 @@ const BlogForm = ({ user, setUser }) => {
 
   return (
     <div>
-      <h2>blogs</h2>
-      {status === "success" && (
-        <Notification
-          status={status}
-          text={`a new blog ${title} by ${author} added`}
-        />
-      )}
-      <p>
-        {user ? `${user.name} logged in` : ""}
-        <button onClick={handleLogout}>Logout</button>
-      </p>
+     
       <h2>create new</h2>
 
-      <form onSubmit={createBlog}>
+      <form onSubmit={create}>
         <div>
           <label htmlFor="title">title</label>
           <input
