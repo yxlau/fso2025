@@ -1,36 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
-import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState("");
   const [notification, setNotification] = useState({});
-
-  const handleLogout = () => {
-    window.localStorage.removeItem("user");
-    setUser("");
-  };
-
-  const createBlog = async ({title, author, url}) => {
-     try {
-         const response = await blogService.create({
-           title,
-           author,
-           url,
-         });         
-         setNotification({status: "success", message: `a new blog ${title} by ${author} added`});
-       } catch (error) {
-         setNotification({status: "error", message: error.message});
-         console.log("Error: ", error.message);
-       }
-setTimeout(() => setNotification({}), 5000);
-  }
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -46,35 +26,46 @@ setTimeout(() => setNotification({}), 5000);
     }
   }, []);
 
-  const loginHandler = async (username, password) => {
+  const handleLogout = () => {
+    window.localStorage.removeItem("user");
+    setUser("");
+  };
+
+  const login = async (username, password) => {
     try {
       const response = await loginService.login({ username, password });
       setUser(response);
       window.localStorage.setItem("user", JSON.stringify(response));
       blogService.setToken(response.token);
     } catch (error) {
-      console.log( error.message)
-      setNotification({status: "error", message: "wrong username or password"});
+      console.log(error.message);
+      setNotification({
+        status: "error",
+        message: "wrong username or password",
+      });
     }
     setTimeout(() => {
       setNotification({});
     }, 5000);
   };
 
+  const blogFormRef = useRef();
+
   if (user) {
     return (
       <div>
         <h2>blogs</h2>
-          <Notification
-            status={notification.status}
-            text={notification.message}
-          />
+
         <p>
           {user ? `${user.name} logged in` : ""}
           <button onClick={handleLogout}>Logout</button>
         </p>
-        <Togglable buttonLabel="New blog">
-          <BlogForm user={user} setUser={setUser} createBlog={createBlog} />
+        <Togglable ref={blogFormRef}>
+          <BlogForm
+            user={user}
+            setUser={setUser}
+            hideForm={() => blogFormRef.current.toggleVisibility()}
+          />
         </Togglable>
         <br />
         {blogs.map((blog) => (
@@ -86,8 +77,11 @@ setTimeout(() => setNotification({}), 5000);
     return (
       <div>
         <h2>Log in to application</h2>
-          <Notification status={notification.status} text={notification.message} />
-        <LoginForm login={loginHandler} />
+        <Notification
+          status={notification.status}
+          text={notification.message}
+        />
+        <LoginForm login={login} />
       </div>
     );
   }

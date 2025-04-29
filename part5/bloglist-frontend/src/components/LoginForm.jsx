@@ -1,5 +1,4 @@
 import { useState } from "react";
-import blogService from "../services/blogs";
 
 const LoginForm = ({ login }) => {
   const [username, setUsername] = useState("");
@@ -7,33 +6,33 @@ const LoginForm = ({ login }) => {
 
   const loginHandler = async (e) => {
     e.preventDefault();
-    login(username, password)
+    login(username, password);
   };
 
-  return (    
-      <form onSubmit={loginHandler}>
-        <div>
-          <label htmlFor="username">username</label>
-          <input
-            type="text"
-            name="username"
-            onChange={({ target }) => {
-              setUsername(target.value);
-            }}
-            value={username}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">password</label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
+  return (
+    <form onSubmit={loginHandler}>
+      <div>
+        <label htmlFor="username">username</label>
+        <input
+          type="text"
+          name="username"
+          onChange={({ target }) => {
+            setUsername(target.value);
+          }}
+          value={username}
+        />
+      </div>
+      <div>
+        <label htmlFor="password">password</label>
+        <input
+          type="password"
+          name="password"
+          value={password}
+          onChange={({ target }) => setPassword(target.value)}
+        />
+      </div>
+      <button type="submit">login</button>
+    </form>
   );
 };
 

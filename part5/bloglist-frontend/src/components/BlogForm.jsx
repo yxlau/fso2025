@@ -2,14 +2,28 @@ import { useState } from "react";
 import blogService from "../services/blogs";
 import Notification from "./Notification";
 
-const BlogForm = ({ user, setUser, createBlog }) => {
+const BlogForm = ({ user, setUser, hideForm }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+  const [status, setStatus] = useState("");
 
   const create = async (e) => {
     e.preventDefault();
-    createBlog({title, author, url})
+
+    try {
+      const response = await blogService.create({
+        title,
+        author,
+        url,
+      });
+
+      setStatus("success");
+      hideForm();
+    } catch (error) {
+      setStatus("error");
+      console.log("Error: ", error.message);
+    }
     setTimeout(() => {
       setTitle("");
       setAuthor("");
@@ -17,11 +31,20 @@ const BlogForm = ({ user, setUser, createBlog }) => {
     }, 5000);
   };
 
+  const onCancel = (e) => {
+    e.preventDefault();
+    hideForm();
+  };
+
   return (
     <div>
-     
       <h2>create new</h2>
-
+      {status === "success" && (
+        <Notification
+          status={status}
+          text={`a new blog ${title} by ${author} added`}
+        />
+      )}
       <form onSubmit={create}>
         <div>
           <label htmlFor="title">title</label>
@@ -51,6 +74,7 @@ const BlogForm = ({ user, setUser, createBlog }) => {
           />
         </div>
         <button type="submit">create</button>
+        <button onClick={onCancel}>cancel</button>
       </form>
     </div>
   );
