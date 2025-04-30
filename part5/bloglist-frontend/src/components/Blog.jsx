@@ -30,13 +30,14 @@ const Blog = ({ blog }) => {
 
   return (
     <div style={{ border: "1px solid #ccc", padding: "3px" }}>
-      {blog.title} <button onClick={toggleVisibility}>{buttonLabel}</button>
+      {blog.title}, {blog.author}{" "}
+      <button onClick={toggleVisibility}>{buttonLabel}</button>
       <Togglable ref={blogDetailsRef}>
         {blog.url}
         <br />
         likes {blog.likes} <button onClick={like}>like</button>
         <br />
-        {blog.author}
+        {blog.user.name}
       </Togglable>
     </div>
   );
