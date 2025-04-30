@@ -1,18 +1,8 @@
 import PropTypes from 'prop-types'
-import { useState, useRef } from 'react'
 import Togglable from '../components/Togglable'
 import blogService from '../services/blogs'
 const Blog = ({ blog, user }) => {
-  const [isVisible, setVisibility] = useState(false)
-  const [buttonLabel, setLabel] = useState('view')
 
-  const blogDetailsRef = useRef()
-
-  const toggleVisibility = () => {
-    blogDetailsRef.current.toggleVisibility()
-    setVisibility(!isVisible)
-    setLabel(!isVisible ? 'hide' : 'view')
-  }
 
   const like = async () => {
     try {
@@ -41,8 +31,7 @@ const Blog = ({ blog, user }) => {
   return (
     <div style={{ border: '1px solid #ccc', padding: '3px' }}>
       {blog.title}, {blog.author}{' '}
-      <button onClick={toggleVisibility}>{buttonLabel}</button>
-      <Togglable ref={blogDetailsRef}>
+      <Togglable buttonLabel="show">
         <div className="details">
           {blog.url}
           <br />

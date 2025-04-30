@@ -53,10 +53,6 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  const toggleBlogForm = () => {
-    blogFormRef.current.toggleVisibility()
-  }
-
   if (user) {
     return (
       <div>
@@ -66,8 +62,7 @@ const App = () => {
           {user ? `${user.name} logged in` : ''}
           <button onClick={handleLogout}>Logout</button>
         </p>
-        <button onClick={toggleBlogForm}>new blog</button>
-        <Togglable ref={blogFormRef}>
+        <Togglable ref={blogFormRef} buttonLabel='new blog'>
           <BlogForm
             user={user}
             setUser={setUser}
