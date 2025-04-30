@@ -64,8 +64,6 @@ const App = () => {
         </p>
         <Togglable ref={blogFormRef} buttonLabel='new blog'>
           <BlogForm
-            user={user}
-            setUser={setUser}
             hideForm={() => blogFormRef.current.toggleVisibility()}
           />
         </Togglable>
