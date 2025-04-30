@@ -16,13 +16,10 @@ const Blog = ({ blog }) => {
   const like = async () => {
     try {
       const response = await blogService.update(blog.id, {
-        title: blog.title,
-        author: blog.author,
-        url: blog.url,
+        ...blog,
         likes: blog.likes + 1,
         user: blog.user.id,
       });
-      toggleVisibility();
     } catch (error) {
       console.log("Error", error.message);
     }
