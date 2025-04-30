@@ -43,16 +43,18 @@ const Blog = ({ blog, user }) => {
       {blog.title}, {blog.author}{' '}
       <button onClick={toggleVisibility}>{buttonLabel}</button>
       <Togglable ref={blogDetailsRef}>
-        {blog.url}
-        <br />
-        likes {blog.likes} <button onClick={like}>like</button>
-        <br />
-        {blog.user.name}
-        {blog.user.id === user.id ? (
-          <button onClick={deleteBlog}>remove</button>
-        ) : (
-          ''
-        )}
+        <div className="details">
+          {blog.url}
+          <br />
+          likes {blog.likes} <button onClick={like}>like</button>
+          <br />
+          {blog.user.name}
+          {blog.user.id === user.id ? (
+            <button onClick={deleteBlog}>remove</button>
+          ) : (
+            ''
+          )}
+        </div>
       </Togglable>
     </div>
   )
