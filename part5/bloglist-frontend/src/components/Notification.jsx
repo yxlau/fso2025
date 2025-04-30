@@ -1,30 +1,30 @@
 const Notification = ({ status, text }) => {
   if (!status) {
-    return <></>;
+    return <></>
   }
 
-  let colour;
+  let colour
   switch (status) {
-    case "error":
-      colour = "red";
-      break;
-    case "success":
-      colour = "green";
-      break;
+  case 'error':
+    colour = 'red'
+    break
+  case 'success':
+    colour = 'green'
+    break
   }
 
   return (
     <div
       style={{
         border: `2px solid ${colour}`,
-        background: "#ddd",
-        padding: "2px",
-        margin: "10px 0",
+        background: '#ddd',
+        padding: '2px',
+        margin: '10px 0',
       }}
     >
       {text}
     </div>
-  );
-};
+  )
+}
 
-export default Notification;
+export default Notification

@@ -1,45 +1,45 @@
-import { useState } from "react";
-import blogService from "../services/blogs";
-import Notification from "./Notification";
+import { useState } from 'react'
+import blogService from '../services/blogs'
+import Notification from './Notification'
 
-const BlogForm = ({ user, setUser, hideForm }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
-  const [status, setStatus] = useState("");
+const BlogForm = ({ hideForm }) => {
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+  const [status, setStatus] = useState('')
 
   const create = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
       const response = await blogService.create({
         title,
         author,
         url,
-      });
+      })
 
-      setStatus("success");
-      hideForm();
+      setStatus('success')
+      hideForm()
     } catch (error) {
-      setStatus("error");
-      console.log("Error: ", error.message);
+      setStatus('error')
+      console.log('Error: ', error.message)
     }
     setTimeout(() => {
-      setTitle("");
-      setAuthor("");
-      setUrl("");
-    }, 5000);
-  };
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+    }, 5000)
+  }
 
   const onCancel = (e) => {
-    e.preventDefault();
-    hideForm();
-  };
+    e.preventDefault()
+    hideForm()
+  }
 
   return (
     <div>
       <h2>create new</h2>
-      {status === "success" && (
+      {status === 'success' && (
         <Notification
           status={status}
           text={`a new blog ${title} by ${author} added`}
@@ -77,7 +77,7 @@ const BlogForm = ({ user, setUser, hideForm }) => {
         <button onClick={onCancel}>cancel</button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default BlogForm;
+export default BlogForm
