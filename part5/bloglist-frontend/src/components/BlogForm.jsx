@@ -51,6 +51,7 @@ const BlogForm = ({ hideForm }) => {
           <input
             type="text"
             name="title"
+            id="title"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
           />
@@ -60,6 +61,7 @@ const BlogForm = ({ hideForm }) => {
           <input
             type="text"
             name="author"
+            id="author"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
           />
@@ -69,6 +71,7 @@ const BlogForm = ({ hideForm }) => {
           <input
             type="text"
             name="url"
+            id="url"
             value={url}
             onChange={({ target }) => setUrl(target.value)}
           />
