@@ -2,7 +2,7 @@ import { useState } from 'react'
 import blogService from '../services/blogs'
 import Notification from './Notification'
 
-const BlogForm = ({ hideForm }) => {
+const BlogForm = ({ hideForm, blogs, setBlogs, user }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -16,10 +16,11 @@ const BlogForm = ({ hideForm }) => {
         title,
         author,
         url,
+        user
       })
 
       setStatus('success')
-      hideForm()
+      setBlogs([...blogs, response])
     } catch (error) {
       setStatus('error')
       console.log('Error: ', error.message)
@@ -28,6 +29,8 @@ const BlogForm = ({ hideForm }) => {
       setTitle('')
       setAuthor('')
       setUrl('')
+      setStatus('')
+      hideForm()
     }, 5000)
   }
 
@@ -52,6 +55,7 @@ const BlogForm = ({ hideForm }) => {
             type="text"
             name="title"
             id="title"
+            data-testid="title"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
           />
@@ -62,6 +66,7 @@ const BlogForm = ({ hideForm }) => {
             type="text"
             name="author"
             id="author"
+            data-testid="author"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
           />
@@ -72,6 +77,7 @@ const BlogForm = ({ hideForm }) => {
             type="text"
             name="url"
             id="url"
+            data-testid="url"
             value={url}
             onChange={({ target }) => setUrl(target.value)}
           />

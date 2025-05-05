@@ -10,9 +10,9 @@ post {{baseUrl}}/api/users
 Content-Type: application/json
 
 {
-   "username": "andy",
-   "name": "andy",
-  "password": "andworm"
+   "username": "testy",
+   "name": "tester",
+  "password": "testword"
 }
 
 ###
