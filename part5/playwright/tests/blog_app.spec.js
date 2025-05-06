@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith } = require('./helper')
+const { loginWith, createBlog } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page }) => {
@@ -42,16 +42,23 @@ describe('Blog app', () => {
       beforeEach(async({page}) => {
         await loginWith(page, 'testy', 'testword')
       })
+
       test('can create blog', async({page}) => {
-        await page.getByRole('button', {name: 'new blog'}).click()
-        await page.getByTestId("title").fill("the title")
-        await page.getByTestId("author").fill("the author")
-        await page.getByTestId("url").fill("http://url.com")
-        await page.getByRole('button', {name: 'create'}).click()
+        await createBlog(page, 'the title', 'the author', 'http://url.com')
+        await page.getByText('the title, the author').waitFor()
 
         await expect(page.getByText("the title, the author")).toBeVisible()
+      })
 
+      test('can like a blog', async({page}) => {
+        await page.getByRole('button', {name: 'view'}).waitFor()
+        await page.getByRole('button', {name: 'view'}).first().click()
+        const likeCount = parseInt(await page.getByTestId('likeCount').first().innerText())
+        await page.getByRole('button', {name: 'like'}).first().click()
+        await page.waitForTimeout(3000)
+        const newCount = parseInt(await page.getByTestId('likeCount').first().innerText())
 
+        await expect(newCount).toBe(likeCount + 1)
       })
     })
     })
