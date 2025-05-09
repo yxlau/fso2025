@@ -60,6 +60,19 @@ describe('Blog app', () => {
 
         await expect(newCount).toBe(likeCount + 1)
       })
+
+      test('can delete own blog', async({page}) => {
+        const title = `removable ${Math.floor(Math.random() * 1001)}`
+        await createBlog(page, title , 'the author', 'http://removable.com')
+        await page.getByText(`${title}, the author`).waitFor()
+        await page.getByRole('button', {name: 'view'}).last().click()
+        page.on('dialog', dialog => dialog.accept());
+        await page.getByRole('button', {name: 'remove'} ).click()
+
+        await expect(page.getByText(`${title}, the author`)).not.toBeVisible()
+      })
+
+      
     })
     })
 

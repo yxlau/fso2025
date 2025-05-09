@@ -51,6 +51,28 @@ const App = () => {
     }, 5000)
   }
 
+  const deleteBlog = async (blog) => {
+    const confirm = window.confirm(
+      `Remove blog ${blog.title} by ${blog.author}?`
+    )
+    if (!confirm) return
+    try {
+      const response = await blogService.deleteOne(blog.id)
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+    } catch (error) {
+      console.log('Error', error.message)
+    }
+  }
+
+  const createBlog = async (blogData) => {
+    try {
+      const response = await blogService.create(blogData)
+      setBlogs([...blogs, response])
+    } catch (error) {
+      console.log('Error: ', error.message)
+    }
+  }
+
   const blogFormRef = useRef()
 
   if (user) {
@@ -68,11 +90,12 @@ const App = () => {
             blogs={blogs}
             setBlogs={setBlogs}
             user={user}
+            createBlog={createBlog}
           />
         </Togglable>
         <br />
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} user={user} />
+          <Blog key={blog.id} blog={blog} user={user} deleteBlog={deleteBlog} />
         ))}
       </div>
     )

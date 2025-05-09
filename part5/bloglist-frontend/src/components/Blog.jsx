@@ -2,15 +2,18 @@ import PropTypes from 'prop-types'
 import Togglable from '../components/Togglable'
 import blogService from '../services/blogs'
 import { useState } from 'react'
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, user, deleteBlog }) => {
   const [likes, setLikes] = useState(blog.likes)
+
+  console.log(blog)
+  console.log(user.id)
 
   const like = async () => {
     try {
       const response = await blogService.update(blog.id, {
         ...blog,
         likes: likes + 1,
-        user: blog.user.id,
+        user: blog.user.id
       })
       setLikes(likes + 1)
     } catch (error) {
@@ -18,16 +21,8 @@ const Blog = ({ blog, user }) => {
     }
   }
 
-  const deleteBlog = async () => {
-    const confirm = window.confirm(
-      `Remove blog ${blog.title} by ${blog.author}?`
-    )
-    if (!confirm) return
-    try {
-      const response = await blogService.deleteOne(blog.id)
-    } catch (error) {
-      console.log('Error', error.message)
-    }
+  const handleBlogDeletion = async () => {
+    deleteBlog(blog)
   }
 
   return (
@@ -41,7 +36,7 @@ const Blog = ({ blog, user }) => {
           <br />
           {user.name}
           {blog.user.id === user.id ? (
-            <button onClick={deleteBlog}>remove</button>
+            <button onClick={handleBlogDeletion}>remove</button>
           ) : (
             ''
           )}

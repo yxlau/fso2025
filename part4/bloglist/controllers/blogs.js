@@ -14,6 +14,7 @@ blogsRouter.get("/:id", async (request, response) => {
 });
 
 blogsRouter.post("/", async (request, response) => {
+
   const body = request.body;
   const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
@@ -32,14 +33,16 @@ blogsRouter.post("/", async (request, response) => {
     author: body.author,
     url: body.url,
     likes: body.likes || 0,
-    user: user._id,
+    user: user.id,
   });
 
   const savedBlog = await blog.save();
   user.blogs = user.blogs.concat(savedBlog._id);
   await user.save();
 
-  response.status(201).json(savedBlog);
+  // Populate the user field before sending response
+  const populatedBlog = await Blog.findById(savedBlog._id).populate('user');
+  response.status(201).json(populatedBlog);
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
