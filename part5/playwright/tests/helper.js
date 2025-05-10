@@ -35,12 +35,13 @@ const apiLogin = async(request, username, password) =>{
   })
 }
 
-const apiCreateBlog = async(request, title, author, url, token) => {
+const apiCreateBlog = async(request, blog, token) => {
   return await request.post(`${baseUrl}/blogs`, {
     data: {
-      title: title,
-      author: author,
-      url: url
+      title: blog.title || 'title',
+      author: blog.author || 'author',
+      url: blog.url || 'http://url.com',
+      likes: blog.likes || 0
     },
     headers: {
       'Authorization': `Bearer ${token}`
@@ -48,4 +49,24 @@ const apiCreateBlog = async(request, title, author, url, token) => {
   })
 }
 
-export { loginWith, createBlog, apiCreateUser, apiCreateBlog, apiLogin }
+const apiUpdateBlog = async(request, id, blog, token) => {
+  return await request.put(`${baseUrl}/blogs/${id}`, {
+    data: blog,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+}
+
+const apiGetToken = async(request, username, password) => {
+  const loginResponse = await request.post(`${baseUrl}/login`, {
+    data: {
+      username: username,
+      password: password
+    }
+  })
+  const loginData = await loginResponse.json()
+  return loginData.token
+}
+
+export { loginWith, createBlog, apiCreateUser, apiCreateBlog, apiLogin, apiUpdateBlog, apiGetToken }
