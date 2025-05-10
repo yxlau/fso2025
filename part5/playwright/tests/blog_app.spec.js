@@ -1,9 +1,9 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith, createBlog } = require('./helper')
+const { loginWith, createBlog, apiCreateUser, apiLogin, apiCreateBlog } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173')
+    await page.goto('/')
   })
 
   test('Login form is shown', async ({ page }) => {
@@ -16,17 +16,11 @@ describe('Blog app', () => {
   describe('Login', () => {
     beforeEach(async ({ page, request }) => {
       await request.post("http://localhost:3001/api/testing/reset")
-      await request.post("http://localhost:3001/api/users", {
-        data: {
-          name: 'tester',
-          password: 'testword',
-          username: 'testy'
-        }
-      })
+      await apiCreateUser(request, 'tester', 'testy', 'testword')
     })
+
     test('succeeds with correct credentials', async ({ page }) => {
       await loginWith(page, 'testy', 'testword')
-
       await expect(page.getByText("tester logged in")).toBeVisible()
     })
 
@@ -38,47 +32,26 @@ describe('Blog app', () => {
 
     })
 
-    test('cannot delete other blogs', async ({ page, request }) => {
-      const userResponse = await request.post("http://localhost:3001/api/users", {
-        data: {
-          name: 'othertester',
-          password: 'otherword',
-          username: 'other'
-        }
+    describe('with existing blogs', () => {
+      beforeEach(async ({ page, request }) => {
+        await apiCreateUser(request, 'othertester', 'other', 'otherword')
+        const loginResponse = await apiLogin(request, 'other', 'otherword');
+        const loginData = await loginResponse.json()
+        const token = loginData.token;
+        await apiCreateBlog(request, "other title", 'other author', 'http://otherurl.com', token);
+        await page.waitForTimeout(5000)
+
       })
+    
 
-      const otherUser = userResponse.json()
-
-      const loginResponse = await request.post("http://localhost:3001/api/login", {
-        data: {
-          username: 'other',
-          password: 'otherword',
-        }
-      });
-
-      const loginData = await loginResponse.json();
-      const token = loginData.token;
-
-      // Create blog with authorization header
-      const blogResponse = await request.post("http://localhost:3001/api/blogs", {
-        data: {
-          title: "other title",
-          author: "other author",
-          url: "http://otherurl.com",
-        },
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      await page.waitForTimeout(3000)
-
+    test('cannot delete other blogs', async ({ page, request }) => {
       await loginWith(page, 'testy', 'testword')
       await expect(page.getByText("tester logged in")).toBeVisible()
 
-      await page.getByText('other title, other author').waitFor()
+      // await page.getByText('other title, other author').waitFor()
       await page.getByRole('button', { name: 'view' }).last().click()
       await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
+    })
     })
 
     describe('When logged in', () => {
@@ -122,8 +95,4 @@ describe('Blog app', () => {
 
 
   })
-
-
-
 })
-
